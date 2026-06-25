@@ -9,9 +9,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:flutter-clean.generateFeature"
-  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -19,7 +16,16 @@
         "command": "flutter-clean.generateFeature",
         "title": "Flutter Clean: Generate Feature"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "flutter-clean.generateFeature",
+          "group": "navigation",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
