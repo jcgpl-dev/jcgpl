@@ -2,6 +2,11 @@ import * as vscode from 'vscode';
 import { generateFeature } from './generators/featureGenerator';
 import { generateCore } from './generators/coreGenerator'; 
 import { generateConfig } from './generators/configGenerator';
+import { initializeProject }
+  from './generators/initializeProjectGenerator';
+import {
+  generateProjectSnapshot
+} from './generators/projectSnapshotGenerator';
 
 export function activate(context: vscode.ExtensionContext) {
   // Register Feature Generator
@@ -24,9 +29,22 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand(
     'flutter-architect.generateConfig',
     generateConfig
+    );
+  
+  const initializeProjectCommand =
+  vscode.commands.registerCommand(
+    'flutter-architect.initializeProject',
+    initializeProject
   );
 
-  context.subscriptions.push(featureDisposable, coreDisposable, configCommand);
+  const snapshotCommand =
+  vscode.commands.registerCommand(
+    'flutter-architect.generateProjectSnapshot',
+    generateProjectSnapshot
+  );
+
+
+  context.subscriptions.push(featureDisposable, coreDisposable, configCommand, initializeProjectCommand, snapshotCommand);
 }
 
 export function deactivate() {}
