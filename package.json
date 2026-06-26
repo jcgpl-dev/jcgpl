@@ -30,7 +30,7 @@
       },
       {
         "command": "flutter-architect.generateProjectSnapshot",
-        "title": "Flutter Architect: Export Project Snapshot"
+        "title": "Export Project Snapshot"
       }
     ],
     "menus": {

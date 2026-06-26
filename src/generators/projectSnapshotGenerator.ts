@@ -167,15 +167,19 @@ function appendFileContent(
         'utf8'
       );
 
-    content
-      .split('\n')
-      .forEach((line) => {
         lines.push(
-          `${indent}${line}`
-        );
+      `${indent}─────────────────────────────────────`
+    );
+
+    content
+      .split(/\r?\n/)
+      .forEach((line) => {
+        lines.push(`${indent}${line}`);
       });
 
-    lines.push('');
+    lines.push(
+      `${indent}─────────────────────────────────────`
+    );
   } catch {
     lines.push(
       `${indent}[Unable to read file]`
