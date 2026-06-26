@@ -31,6 +31,10 @@
       {
         "command": "flutter-architect.generateProjectSnapshot",
         "title": "Export Project Snapshot"
+      },
+      {
+        "command": "flutter-architect.copyFileForAi",
+        "title": "Copy File Snapshot"
       }
     ],
     "menus": {
@@ -51,6 +55,11 @@
         },
         {
           "command": "flutter-architect.generateProjectSnapshot",
+          "group": "navigation"
+        },
+        {
+          "command": "flutter-architect.copyFileForAi",
+          "when": "resourceScheme == file && !explorerResourceIsFolder",
           "group": "navigation"
         }
       ]

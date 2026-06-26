@@ -8,6 +8,10 @@ import {
   generateProjectSnapshot
 } from './generators/projectSnapshotGenerator';
 
+import {
+  copyFileForAi,
+} from './generators/copyFileForAiGenerator';
+
 export function activate(context: vscode.ExtensionContext) {
   // Register Feature Generator
   const featureDisposable = vscode.commands.registerCommand(
@@ -41,10 +45,16 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand(
     'flutter-architect.generateProjectSnapshot',
     generateProjectSnapshot
+    );
+  
+  const copyFileForAiCommand =
+  vscode.commands.registerCommand(
+    'flutter-architect.copyFileForAi',
+    copyFileForAi
   );
 
 
-  context.subscriptions.push(featureDisposable, coreDisposable, configCommand, initializeProjectCommand, snapshotCommand);
+  context.subscriptions.push(featureDisposable, coreDisposable, configCommand, initializeProjectCommand, snapshotCommand, copyFileForAiCommand);
 }
 
 export function deactivate() {}
