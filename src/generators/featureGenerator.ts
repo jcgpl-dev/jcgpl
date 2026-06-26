@@ -29,17 +29,20 @@ if (!featureName) {
 
   // 3. Define Clean Architecture Directory Map
   const baseFeaturePath = path.join(rootPath, featureName);
-  const directories = [
-    'data/datasources',
-    'data/models',
-    'data/repositories',
-    'domain/entities',
-    'domain/repositories',
-    'domain/usecases',
-    'presentation/bloc',
-    'presentation/pages',
-    'presentation/widgets'
-  ];
+const directories = [
+  'data/datasources/local',
+  'data/datasources/remote',
+  'data/models',
+  'data/repositories',
+
+  'domain/entities',
+  'domain/repositories',
+  'domain/usecases',
+
+  'presentation/bloc',
+  'presentation/pages',
+  'presentation/widgets',
+];
 
   try {
     // Create directories recursively

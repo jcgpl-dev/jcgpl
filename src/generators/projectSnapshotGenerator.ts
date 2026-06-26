@@ -43,7 +43,6 @@ export async function generateProjectSnapshot(
     return;
   }
 
-  // THIS makes it dynamic.
   const rootPath =
     targetUri?.fsPath ??
     workspace.uri.fsPath;
@@ -51,40 +50,69 @@ export async function generateProjectSnapshot(
   const rootName =
     path.basename(rootPath);
 
-  const saveUri =
-    await vscode.window.showSaveDialog({
-      defaultUri: vscode.Uri.file(
-        path.join(
-          workspace.uri.fsPath,
-          `${rootName}_snapshot.txt`
-        )
-      ),
-      filters: {
-        Text: ['txt'],
-      },
-    });
-
-  if (!saveUri) {
-    return;
-  }
-
   const lines: string[] = [];
 
   lines.push(rootName);
-  buildTree(rootPath, '', lines);
 
-  fs.writeFileSync(
-    saveUri.fsPath,
-    lines.join('\n')
+  buildTree(
+    rootPath,
+    '',
+    lines
   );
 
-  vscode.window.showInformationMessage(
-    'Project snapshot generated successfully!'
+  const snapshot =
+    lines.join('\n');
+
+  // Copy to clipboard
+  await vscode.env.clipboard.writeText(
+    snapshot
   );
 
-  vscode.workspace.openTextDocument(
-    saveUri.fsPath
-  ).then(vscode.window.showTextDocument);
+  // Open preview tab
+  const document =
+    await vscode.workspace.openTextDocument({
+      content: snapshot,
+      language: 'plaintext',
+    });
+
+  await vscode.window.showTextDocument(
+    document,
+    {
+      preview: true,
+      preserveFocus: false,
+      viewColumn:
+        vscode.ViewColumn.Beside,
+    }
+  );
+
+  const action =
+    await vscode.window.showInformationMessage(
+      '✅ Project snapshot copied to clipboard.',
+      'Save As'
+    );
+
+  if (action === 'Save As') {
+    const saveUri =
+      await vscode.window.showSaveDialog({
+        defaultUri: vscode.Uri.file(
+          `${rootName}_snapshot.txt`
+        ),
+        filters: {
+          'Text Files': ['txt'],
+        },
+      });
+
+    if (saveUri) {
+      fs.writeFileSync(
+        saveUri.fsPath,
+        snapshot
+      );
+
+      vscode.window.showInformationMessage(
+        'Project snapshot saved successfully!'
+      );
+    }
+  }
 }
 
 function buildTree(
@@ -94,10 +122,34 @@ function buildTree(
 ) {
   const children = fs
     .readdirSync(currentPath)
-    .filter((name) => {
-      return !ignoredDirectories.includes(
-        name
-      );
+    .filter(
+      (name) =>
+        !ignoredDirectories.includes(
+          name
+        )
+    )
+    .sort((a, b) => {
+      const aPath =
+        path.join(currentPath, a);
+
+      const bPath =
+        path.join(currentPath, b);
+
+      const aDir =
+        fs.statSync(aPath).isDirectory();
+
+      const bDir =
+        fs.statSync(bPath).isDirectory();
+
+      if (aDir && !bDir) {
+        return -1;
+      }
+
+      if (!aDir && bDir) {
+        return 1;
+      }
+
+      return a.localeCompare(b);
     });
 
   children.forEach((name, index) => {
@@ -167,19 +219,22 @@ function appendFileContent(
         'utf8'
       );
 
-        lines.push(
+    lines.push(
       `${indent}─────────────────────────────────────`
     );
 
     content
       .split(/\r?\n/)
       .forEach((line) => {
-        lines.push(`${indent}${line}`);
+        lines.push(
+          `${indent}${line}`
+        );
       });
 
     lines.push(
       `${indent}─────────────────────────────────────`
     );
+
   } catch {
     lines.push(
       `${indent}[Unable to read file]`
