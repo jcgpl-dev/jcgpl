@@ -15,10 +15,23 @@
       {
         "command": "flutter-clean.generateFeature",
         "title": "Flutter Clean: Generate Feature"
+      },
+      {
+        "command": "flutter-clean.generateCore",
+        "title": "Flutter Clean: Initialize Core Architecture"
+      },
+      {
+        "command": "flutter-architect.generateConfig",
+        "title": "Flutter Architect: Generate Config"
       }
     ],
     "menus": {
       "explorer/context": [
+        {
+          "command": "flutter-clean.generateCore",
+          "group": "flutter_clean@1",
+          "when": "explorerResourceIsFolder"
+        },
         {
           "command": "flutter-clean.generateFeature",
           "group": "navigation",

@@ -1,16 +1,32 @@
 import * as vscode from 'vscode';
 import { generateFeature } from './generators/featureGenerator';
+import { generateCore } from './generators/coreGenerator'; 
+import { generateConfig } from './generators/configGenerator';
 
 export function activate(context: vscode.ExtensionContext) {
-  const disposable = vscode.commands.registerCommand(
-    'flutter-clean.generateFeature', // Fixed to match package.json exactly
+  // Register Feature Generator
+  const featureDisposable = vscode.commands.registerCommand(
+    'flutter-clean.generateFeature',
     async (uri: vscode.Uri) => {
-      // Pass the selected directory URI if triggered via right-click
       await generateFeature(uri);
     }
   );
 
-  context.subscriptions.push(disposable);
+  // Register Core Architecture Generator
+  const coreDisposable = vscode.commands.registerCommand(
+    'flutter-clean.generateCore',
+    async (uri: vscode.Uri) => {
+      await generateCore(uri);
+    }
+  );
+
+  const configCommand =
+  vscode.commands.registerCommand(
+    'flutter-architect.generateConfig',
+    generateConfig
+  );
+
+  context.subscriptions.push(featureDisposable, coreDisposable, configCommand);
 }
 
 export function deactivate() {}
